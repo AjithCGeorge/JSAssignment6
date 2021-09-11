@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS Assignment 6</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <form  method="post">
+        <label for="email">Enter your Name:</label>
+        <input type="text" name="fname" required><br><br>
+        <label for="email">Enter your email:</label>
+        <input type="email" id="email" name="email"><br><br>
+       <label for="email">Select your Country:</label>
+        <select id="countryList" name="country" onchange="regionFn()">
+          <option selected="true" disabled>Choose Country</option>
+        </select><br><br>
+        <label for="email">Select your Region:</label>
+        <select id="regionList" name="country">
+          <option selected="true" disabled>Choose Region/State/Province</option>
+        </select><br><br><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+      $(document).ready(function()
+      {
+        $.getJSON("https://battuta.medunes.net/api/country/all/?key=19af8268ee045855bbf332402b7e75f9&callback=?", function(data, status)
+        {
+
+        var x=data;
+            buildList()
+
+        function buildList()
+        {
+            var dropList = document.getElementById('countryList')
+
+            for (var i = 0; i < x.length; i++){
+                var row=` <option value=${x[i].code}>${x[i].name}</option>`
+                dropList.innerHTML += row
+            }
+        }
+
+        });
+    });
+
+
+
+    function regionFn()
+    {
+        var battuttaKey = "19af8268ee045855bbf332402b7e75f9";
+        var e = document.getElementById("countryList");
+        var cCode=e.value;
+        var url1= "https://battuta.medunes.net/api/region/"+cCode+"/all/"+"?key="+battuttaKey+"&callback=?";
+
+
+            $.getJSON(url1, function(data, status)
+                {
+
+                    var x=data;
+                    console.log(data);
+                    buildRegion()
+
+            function buildRegion()
+            {
+                var dropList = document.getElementById('regionList')
+                for (var i = 0; i < x.length; i++)
+                    {
+                    var row2=` <option value=${x[i].region}>${x[i].region}</option>`
+                    dropList.innerHTML += row2
+                    }
+            }
+        });
+    }
+
+
+
+    </script>
+
+
+</body>
+</html>
